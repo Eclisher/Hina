@@ -1,10 +1,28 @@
 import { useState } from 'react';
 import googleLogo from '../../assets/google.png';
 import styles from './Auth.module.css';
+import { signin } from '../Api/Auth';
 
 export default function Authentification() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const toggleForm = () => setIsSignUp(!isSignUp);
+
+  const handleSignIn = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      const token = await signin({ email, password });
+
+      if (token) {
+        alert('Connexion réussie!');
+      } else {
+        alert('Email ou mot de passe incorrect');
+      }
+    } catch (error) {
+      alert('Erreur de connexion, veuillez réessayer');
+    }
+  };
 
   const GoogleButton = ({ text, href }: { text: string; href: string }) => (
     <a
@@ -19,16 +37,20 @@ export default function Authentification() {
     <div className={styles.body_container}>
       <div className={`${styles.container} ${isSignUp ? styles.active : ''}`}>
         <div className={`${styles['form-container']} ${styles['sign-in']}`}>
-          <form className="flex flex-col items-center justify-center px-10 h-full bg-white">
+          <form onSubmit={handleSignIn} className="flex flex-col items-center justify-center px-10 h-full bg-white">
             <h1 className="text-[5vh] font-bold">Sign In</h1>
             <input
               type="email"
               placeholder="Email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               className="bg-[#e4e6d6] my-2 px-4 py-2 text-sm rounded w-full outline-none"
             />
             <input
               type="password"
               placeholder="Password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
               className="bg-[#e4e6d6] my-2 px-4 py-2 text-sm rounded w-full outline-none"
             />
             <button
