@@ -1,10 +1,20 @@
 import { useState } from 'react';
+import googleLogo from '../../assets/google.png';
 import styles from './Auth.module.css';
 
 export default function Authentification() {
   const [isSignUp, setIsSignUp] = useState(false);
   const toggleForm = () => setIsSignUp(!isSignUp);
 
+  const GoogleButton = ({ text, href }: { text: string; href: string }) => (
+    <a
+      href={href}
+      className="google-btn flex items-center justify-center gap-2  text-sm text-gray-700 font-medium px-4 py-2 mt-4 rounded shadow-sm hover:shadow transition bg-transparent"
+    >
+      <img src={googleLogo} alt="Google logo" style={{ height: '30px', width: 'auto' }} />
+      {text}
+    </a>
+  );
   return (
     <div className={styles.body_container}>
       <div className={`${styles.container} ${isSignUp ? styles.active : ''}`}>
@@ -27,9 +37,9 @@ export default function Authentification() {
             >
               Sign In
             </button>
+            <GoogleButton text="Sign in with Google" />
           </form>
         </div>
-
         <div className={`${styles['form-container']} ${styles['sign-up']}`}>
           <form className="flex flex-col items-center justify-center px-10 h-full bg-white">
             <h1 className="text-[5vh] font-bold">Create Account</h1>
@@ -49,9 +59,9 @@ export default function Authentification() {
             >
               Sign Up
             </button>
+            <GoogleButton text="Sign up with Google" />
           </form>
         </div>
-
         <div className={styles['toggle-container']}>
           <div className={styles.toggle}>
             <div className={`${styles['toggle-panel']} ${styles['toggle-left']}`}>
