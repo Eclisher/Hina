@@ -10,15 +10,41 @@ import googleLogo from '../../assets/google.png';
 import { auth } from '../firebase/firebase';
 import styles from './Auth.module.css';
 
+type FormValues = {
+  email: string;
+  password: string;
+};
+
+const GoogleButton = ({ text, handleGoogleSignIn }: { text: string; handleGoogleSignIn: () => void }) => (
+  <a
+    type="button"
+    onClick={handleGoogleSignIn}
+    className="google-btn flex items-center justify-center gap-2 text-sm text-gray-700 font-medium px-4 py-2 mt-4 rounded shadow-sm hover:shadow transition bg-transparent"
+  >
+    <img src={googleLogo} alt="Google logo" style={{ height: '30px', width: 'auto' }} />
+    {text}
+  </a>
+);
+
 export default function Authentification() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formValues, setFormValues] = useState<FormValues>({
+    email: '',
+    password: '',
+  });
+  const navigate = useNavigate();
   const [messageSignIn, setMessageSignIn] = useState('');
   const [messageSignUp, setMessageSignUp] = useState('');
   const [loading, setLoading] = useState(false);
+  const { email, password } = formValues;
 
-  const navigate = useNavigate();
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
 
   const toggleForm = () => {
     setIsSignUp(!isSignUp);
@@ -37,8 +63,7 @@ export default function Authentification() {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
       setMessageSignIn('Successfully signed in!');
-      setEmail('');
-      setPassword('');
+      setFormValues({ email: '', password: '' });
       navigate('/hello');
     } catch (error: any) {
       console.error(error);
@@ -59,8 +84,7 @@ export default function Authentification() {
       setLoading(true);
       await createUserWithEmailAndPassword(auth, email, password);
       setMessageSignUp('Account created successfully!');
-      setEmail('');
-      setPassword('');
+      setFormValues({ email: '', password: '' });
     } catch (error: any) {
       console.error(error);
       setMessageSignUp('Account creation failed: ' + error.message);
@@ -81,17 +105,6 @@ export default function Authentification() {
     }
   };
 
-  const GoogleButton = ({ text }: { text: string }) => (
-    <a
-      type="button"
-      onClick={handleGoogleSignIn}
-      className="google-btn flex items-center justify-center gap-2 text-sm text-gray-700 font-medium px-4 py-2 mt-4 rounded shadow-sm hover:shadow transition bg-transparent"
-    >
-      <img src={googleLogo} alt="Google logo" style={{ height: '30px', width: 'auto' }} />
-      {text}
-    </a>
-  );
-
   return (
     <div className={styles.body_container}>
       <div className={`${styles.container} ${isSignUp ? styles.active : ''}`}>
@@ -102,16 +115,18 @@ export default function Authentification() {
             </h1>
             <input
               type="email"
+              name="email"
               placeholder="Email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={handleChange}
               className="bg-[#e4e6d6] my-2 px-4 py-2 text-sm rounded w-full outline-none"
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={handleChange}
+              name="password"
               className="bg-[#e4e6d6] my-2 px-4 py-2 text-sm rounded w-full outline-none"
             />
             <button
@@ -130,7 +145,7 @@ export default function Authentification() {
                 {messageSignIn}
               </p>
             )}
-            <GoogleButton text="Sign in with Google" />
+            <GoogleButton handleGoogleSignIn={handleGoogleSignIn} text="Sign in with Google" />
           </form>
         </div>
         <div className={`${styles['form-container']} ${styles['sign-up']}`}>
@@ -142,14 +157,16 @@ export default function Authentification() {
               type="email"
               placeholder="Email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              name="email"
+              onChange={handleChange}
               className="bg-[#e4e6d6] my-2 px-4 py-2 text-sm rounded w-full outline-none"
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={handleChange}
+              name="password"
               className="bg-[#e4e6d6] my-2 px-4 py-2 text-sm rounded w-full outline-none"
             />
             <button
@@ -168,7 +185,7 @@ export default function Authentification() {
                 {messageSignUp}
               </p>
             )}
-            <GoogleButton text="Sign up with Google" />
+            <GoogleButton handleGoogleSignIn={handleGoogleSignIn} text="Sign up with Google" />
           </form>
         </div>
         <div className={styles['toggle-container']}>
