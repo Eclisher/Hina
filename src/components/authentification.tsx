@@ -6,10 +6,10 @@ import {
 } from 'firebase/auth';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input } from "../components/ui/input";
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import googleLogo from '../../assets/google.png';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Input } from '../components/ui/input';
 import { auth } from '../firebase/firebase';
 
 type FormValues = {
@@ -47,7 +47,7 @@ export default function Authentification() {
       }
       setFormValues({ email: '', password: '' });
     } catch (error) {
-      setMessage(isSignUp ? "Sign up failed." : "Sign in failed.");
+      setMessage(isSignUp ? 'Sign up failed.' : 'Sign in failed.');
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ export default function Authentification() {
       await signInWithPopup(auth, provider);
       navigate('/hello');
     } catch (error) {
-      setMessage("Google sign-in failed.");
+      setMessage('Google sign-in failed.');
     }
   };
 
@@ -77,7 +77,9 @@ export default function Authentification() {
             <CardContent className="space-y-6 mt-4">
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700" htmlFor="email">Email</label>
+                  <label className="text-sm font-medium text-gray-700" htmlFor="email">
+                    Email
+                  </label>
                   <Input
                     id="email"
                     type="email"
@@ -90,7 +92,9 @@ export default function Authentification() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700" htmlFor="password">Password</label>
+                  <label className="text-sm font-medium text-gray-700" htmlFor="password">
+                    Password
+                  </label>
                   <Input
                     id="password"
                     type="password"
@@ -102,22 +106,20 @@ export default function Authentification() {
                   />
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold"
                   disabled={loading}
                 >
-                  {loading
-                    ? (isSignUp ? 'Creating...' : 'Signing in...')
-                    : (isSignUp ? 'SIGN UP' : 'SIGN IN')}
+                  {loading ? (isSignUp ? 'Creating...' : 'Signing in...') : isSignUp ? 'SIGN UP' : 'SIGN IN'}
                 </Button>
 
                 {message && (
-                  <p className={`text-sm text-center ${
-                    message.toLowerCase().includes('success') 
-                      ? 'text-green-600' 
-                      : 'text-red-600'
-                  }`}>
+                  <p
+                    className={`text-sm text-center ${
+                      message.toLowerCase().includes('success') ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
                     {message}
                   </p>
                 )}
@@ -132,9 +134,9 @@ export default function Authentification() {
                 </div>
               </div>
 
-              <Button 
-                variant="outline" 
-                onClick={handleGoogleSignIn} 
+              <Button
+                variant="outline"
+                onClick={handleGoogleSignIn}
                 className="w-full flex gap-2 border-gray-300 text-gray-700"
               >
                 <img src={googleLogo} alt="Google" className="h-5 w-5" />
