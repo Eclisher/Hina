@@ -1,6 +1,6 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Authentification from '../src/Components/Authentification';
-import Hello from '../src/Components/Hello';
+import Authentification from './components/authentification';
+import Hello from './components/hello';
 
 export default function App() {
   return (
